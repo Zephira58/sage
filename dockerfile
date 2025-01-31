@@ -20,4 +20,4 @@ COPY . .
 RUN cargo run --release
 
 # Set the entry point for the container
-ENTRYPOINT ["./target/release/FileSorterX"]
+ENTRYPOINT ["./target/release/Sage"]
