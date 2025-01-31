@@ -1,6 +1,12 @@
 [package]
-name = "Sage"
+name = "sage"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+color-eyre = "0.6.3"
+crossterm = "0.28.1"
+dotenvy = "0.15.7"
+env_logger = "0.11.6"
+log = "0.4.25"
+ratatui = "0.29.0"

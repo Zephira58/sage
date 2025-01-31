@@ -6,19 +6,32 @@ update:
 	cargo update
 
 fmt:
-	cargo fmt --all
+	cargo fmt
 
 lint:
 	cargo clippy --all-targets --all-features -- -D warnings
 
 test:
-	cargo test --all
+	cargo test
 
 build:
 	cargo build --release
 
 run:
 	cargo run
+
+audit:
+	cargo-audit audit
+
+prepush:
+	cargo fmt
+	cargo update
+	cargo clippy --all-targets --all-features -- -D warnings
+	cargo-audit audit
+	cargo test
+
+bench:
+	cargo bench
 
 clean:
 	cargo clean
@@ -42,6 +55,9 @@ help:
 	@echo "  test          - Run tests"
 	@echo "  build         - Build the project in release mode"
 	@echo "  run           - Run the project"
+	@echo "  prepush       - Run the prepush command which will ensure everything's good before pushing to the main repository" 
+	@echo "  audit         - Run the audit command to ensure theres no major security issues"
+	@echo "  benchmark     - Run the benchmark command"
 	@echo "  clean         - Remove build artifacts"
 	@echo "  docker-build  - Build the Docker image"
 	@echo "  docker-run    - Run the Docker container"
