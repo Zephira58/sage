@@ -1,5 +1,5 @@
 use color_eyre::Result;
-use log::{debug, error, info, trace, warn};
+use log::{debug, info};
 use ratatui::{
     crossterm::event::{self, Event, KeyCode, KeyEventKind},
     layout::{Constraint, Layout},
@@ -180,10 +180,10 @@ impl App {
         match self.input_mode {
             InputMode::Normal => {}
             InputMode::Editing => {
-                frame.set_cursor(
+                frame.set_cursor_position((
                     input_area.x + self.character_index as u16 + 1,
                     input_area.y + 1,
-                );
+                ));
             }
         }
 
