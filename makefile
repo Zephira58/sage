@@ -6,13 +6,13 @@ update:
 	cargo update
 
 fmt:
-	cargo fmt --all
+	cargo fmt
 
 lint:
 	cargo clippy --all-targets --all-features -- -D warnings
 
 test:
-	cargo test --all
+	cargo test
 
 build:
 	cargo build --release
@@ -25,9 +25,9 @@ audit:
 
 prepush:
 	cargo-audit audit
-	cargo fmt --all
+	cargo fmt
 	cargo update
-	cargo test --all
+	cargo test
 
 clean:
 	cargo clean
