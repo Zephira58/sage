@@ -20,6 +20,15 @@ build:
 run:
 	cargo run
 
+audit:
+	cargo-audit audit
+
+prepush:
+	cargo-audit audit
+	cargo fmt --all
+	cargo update
+	cargo test --all
+
 clean:
 	cargo clean
 
