@@ -55,3 +55,4 @@ help:
 	@echo "  docker-build  - Build the Docker image"
 	@echo "  docker-run    - Run the Docker container"
 	@echo "  docker-clean  - Remove the Docker image"
+	@echo "  prepush - Run the prepush command which will ensure everything's good before pushing to the main repository" 
