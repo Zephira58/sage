@@ -46,8 +46,10 @@ Sage brings AI assistance directly to your terminal, helping you stay productive
 <table>
   <tbody>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Zephira58"><img src="https://avatars.githubusercontent.com/u/66909997?v=4?s=100" width="100px;" alt="Zephira58"/><br /><sub><b>Zephira58</b></sub></a><br /><a href="https://github.com/Zephira58/sage/commits?author=Zephira58" title="Code">💻</a> <a href="#design-Zephira58" title="Design">🎨</a> <a href="#maintenance-Zephira58" title="Maintenance">🚧</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="[https://github.com/Ellie-Loves-You](https://github.com/Ellie-Loves-You)"><img src="https://avatars.githubusercontent.com/u/156899494?v=4" width="100px;" alt="Ellie-Loves-You"/><br /><sub><b>Ellie-Loves-You</b></sub></a><br /><a href="https://github.com/Zephira58/sage/commits?author=Ellie-Loves-You" title="Code">💻</a> <a href="https://github.com/Zephira58/sage/issues?q=author%3AEllie-Loves-You" title="Bug reports">🐛</a> <a href="#maintenance-Zephira58" title="Maintenance">🚧</a></td> 
+<!-- Zephi -->
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Zephira58"><img src="https://avatars.githubusercontent.com/u/66909997?v=4?s=100" width="100px;" alt="Zephira58"/><br /><sub><b>Zephira58</b></sub></a><br /><a href="https://github.com/Zephira58/sage/commits?author=Zephira58" title="Code">💻</a> <a href="" title="Design">🎨</a> <a href="" title="Maintenance">🚧</a></td>
+<!-- Ellie -->
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Ellie-Loves-You"><img src="https://avatars.githubusercontent.com/u/156899494?v=4" width="100px;" alt="Ellie-Loves-You"/><br /><sub><b>Ellie-Loves-You</b></sub></a><br /><a href="https://github.com/Zephira58/sage/commits?author=Ellie-Loves-You" title="Code">💻</a> <a href="https://github.com/Zephira58/sage/issues?q=author%3AEllie-Loves-You" title="Bug reports">🐛</a> <a href="" title="Maintenance">🚧</a></td> 
     </tr>
   </tbody>
 </table>
