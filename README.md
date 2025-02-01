@@ -1,6 +1,6 @@
 # Sage: Your Personal AI Assistant
 
-![icon](assets\icon.png)
+![icon](https://github.com/Zephira58/sage/blob/main/assets/icon.png?raw=true)
 
 **Sage** is an AI assistant project developed as a passion project by me and my girlfriend. Our goal is to create a system similar to Jarvis from Iron Man, leveraging Large Language Models (LLMs) and various integrations to provide a wide range of functionalities.
 
