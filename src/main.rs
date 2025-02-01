@@ -1,30 +1,32 @@
 use color_eyre::Result;
+use log::{debug, error, info, trace, warn};
 use ratatui::{
     crossterm::event::{self, Event, KeyCode, KeyEventKind},
-    layout::{Constraint, Layout, Position},
+    layout::{Constraint, Layout},
     style::{Color, Modifier, Style, Stylize},
-    text::{Line, Span, Text},
+    text::{Line, Text},
     widgets::{Block, List, ListItem, Paragraph},
     DefaultTerminal, Frame,
 };
 
 fn main() -> Result<()> {
+    env_logger::init();
     color_eyre::install()?;
+    info!("Starting application");
+
     let terminal = ratatui::init();
     let app_result = App::new().run(terminal);
+
     ratatui::restore();
+    info!("Application terminated");
+
     app_result
 }
 
-/// App holds the state of the application
 struct App {
-    /// Current value of the input box
     input: String,
-    /// Position of cursor in the editor area.
     character_index: usize,
-    /// Current input mode
     input_mode: InputMode,
-    /// History of recorded messages
     messages: Vec<String>,
 }
 
@@ -44,25 +46,24 @@ impl App {
     }
 
     fn move_cursor_left(&mut self) {
+        debug!("Moving cursor left");
         let cursor_moved_left = self.character_index.saturating_sub(1);
         self.character_index = self.clamp_cursor(cursor_moved_left);
     }
 
     fn move_cursor_right(&mut self) {
+        debug!("Moving cursor right");
         let cursor_moved_right = self.character_index.saturating_add(1);
         self.character_index = self.clamp_cursor(cursor_moved_right);
     }
 
     fn enter_char(&mut self, new_char: char) {
+        debug!("Entering character: {}", new_char);
         let index = self.byte_index();
         self.input.insert(index, new_char);
         self.move_cursor_right();
     }
 
-    /// Returns the byte index based on the character position.
-    ///
-    /// Since each character in a string can be contain multiple bytes, it's necessary to calculate
-    /// the byte index based on the index of the character.
     fn byte_index(&self) -> usize {
         self.input
             .char_indices()
@@ -72,22 +73,12 @@ impl App {
     }
 
     fn delete_char(&mut self) {
-        let is_not_cursor_leftmost = self.character_index != 0;
-        if is_not_cursor_leftmost {
-            // Method "remove" is not used on the saved text for deleting the selected char.
-            // Reason: Using remove on String works on bytes instead of the chars.
-            // Using remove would require special care because of char boundaries.
-
+        if self.character_index != 0 {
+            debug!("Deleting character at position {}", self.character_index);
             let current_index = self.character_index;
             let from_left_to_current_index = current_index - 1;
-
-            // Getting all characters before the selected character.
             let before_char_to_delete = self.input.chars().take(from_left_to_current_index);
-            // Getting all characters after selected character.
             let after_char_to_delete = self.input.chars().skip(current_index);
-
-            // Put all characters together except the selected one.
-            // By leaving the selected one out, it is forgotten and therefore deleted.
             self.input = before_char_to_delete.chain(after_char_to_delete).collect();
             self.move_cursor_left();
         }
@@ -98,10 +89,12 @@ impl App {
     }
 
     fn reset_cursor(&mut self) {
+        debug!("Resetting cursor position");
         self.character_index = 0;
     }
 
     fn submit_message(&mut self) {
+        info!("Submitting message: {}", self.input);
         self.messages.push(self.input.clone());
         self.input.clear();
         self.reset_cursor();
@@ -110,14 +103,15 @@ impl App {
     fn run(mut self, mut terminal: DefaultTerminal) -> Result<()> {
         loop {
             terminal.draw(|frame| self.draw(frame))?;
-
             if let Event::Key(key) = event::read()? {
                 match self.input_mode {
                     InputMode::Normal => match key.code {
                         KeyCode::Char('e') => {
+                            info!("Switching to editing mode");
                             self.input_mode = InputMode::Editing;
                         }
                         KeyCode::Char('q') => {
+                            info!("Exiting application");
                             return Ok(());
                         }
                         _ => {}
@@ -128,7 +122,10 @@ impl App {
                         KeyCode::Backspace => self.delete_char(),
                         KeyCode::Left => self.move_cursor_left(),
                         KeyCode::Right => self.move_cursor_right(),
-                        KeyCode::Esc => self.input_mode = InputMode::Normal,
+                        KeyCode::Esc => {
+                            info!("Switching to normal mode");
+                            self.input_mode = InputMode::Normal;
+                        }
                         _ => {}
                     },
                     InputMode::Editing => {}
@@ -167,6 +164,7 @@ impl App {
                 Style::default(),
             ),
         };
+
         let text = Text::from(Line::from(msg)).patch_style(style);
         let help_message = Paragraph::new(text);
         frame.render_widget(help_message, help_area);
@@ -178,30 +176,21 @@ impl App {
             })
             .block(Block::bordered().title("Input"));
         frame.render_widget(input, input_area);
-        match self.input_mode {
-            // Hide the cursor. `Frame` does this by default, so we don't need to do anything here
-            InputMode::Normal => {}
 
-            // Make the cursor visible and ask ratatui to put it at the specified coordinates after
-            // rendering
-            #[allow(clippy::cast_possible_truncation)]
-            InputMode::Editing => frame.set_cursor_position(Position::new(
-                // Draw the cursor at the current position in the input field.
-                // This position is can be controlled via the left and right arrow key
-                input_area.x + self.character_index as u16 + 1,
-                // Move one line down, from the border to the input line
-                input_area.y + 1,
-            )),
+        match self.input_mode {
+            InputMode::Normal => {}
+            InputMode::Editing => {
+                frame.set_cursor(
+                    input_area.x + self.character_index as u16 + 1,
+                    input_area.y + 1,
+                );
+            }
         }
 
         let messages: Vec<ListItem> = self
             .messages
             .iter()
-            .enumerate()
-            .map(|(i, m)| {
-                let content = Line::from(Span::raw(format!("{i}: {m}")));
-                ListItem::new(content)
-            })
+            .map(|m| ListItem::new(m.as_str()))
             .collect();
         let messages = List::new(messages).block(Block::bordered().title("Messages"));
         frame.render_widget(messages, messages_area);
