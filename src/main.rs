@@ -1,5 +1,6 @@
 use color_eyre::Result;
 use log::{debug, info};
+mod commands;
 use ratatui::{
     crossterm::event::{self, Event, KeyCode, KeyEventKind},
     layout::{Constraint, Layout},
@@ -8,6 +9,7 @@ use ratatui::{
     widgets::{Block, List, ListItem, Paragraph},
     DefaultTerminal, Frame,
 };
+use regex::Regex;
 
 fn main() -> Result<()> {
     env_logger::init();
@@ -95,9 +97,19 @@ impl App {
 
     fn submit_message(&mut self) {
         info!("Submitting message: {}", self.input);
-        self.messages.push(self.input.clone());
+        self.run_outputcheck();
         self.input.clear();
         self.reset_cursor();
+    }
+
+    fn run_outputcheck(&mut self) {
+        let re = Regex::new(r"\b(?:debug)\b").unwrap();
+        match re.captures(&self.input.clone()) {
+            Some(_debug) => self
+                .messages
+                .push(commands::getprocsesses::get_top_processes()),
+            None => self.messages.push("no match found".to_owned()),
+        }
     }
 
     fn run(mut self, mut terminal: DefaultTerminal) -> Result<()> {
