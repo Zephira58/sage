@@ -103,13 +103,19 @@ impl App {
     }
 
     fn run_outputcheck(&mut self) {
-        let re = Regex::new(r"\b(?:debug)\b").unwrap();
-        match re.captures(&self.input.clone()) {
-            Some(_debug) => self
-                .messages
-                .push(commands::getprocsesses::get_top_processes()),
-            None => self.messages.push("no match found".to_owned()),
+        let currentcapture = self.input.to_lowercase().clone();
+        match currentcapture {
+            _ if Regex::new(r"\b(?:debug)\b")
+                .unwrap()
+                .is_match(&currentcapture) =>
+            {
+                self.messages
+                    .push(commands::getprocsesses::get_top_processes())
+            }
+            _ => self.messages.push("no match found".to_owned()),
         }
+        //match re.captures(&self.input.to_lowercase().clone()) {
+        //let re = Regex::new(r"\b(?:debug)\b").unwrap();
     }
 
     fn run(mut self, mut terminal: DefaultTerminal) -> Result<()> {
@@ -204,7 +210,7 @@ impl App {
             .iter()
             .map(|m| ListItem::new(m.as_str()))
             .collect();
-        let messages = List::new(messages).block(Block::bordered().title("Messages"));
+        let messages = List::new(messages).block(Block::bordered().title("S.A.G.E"));
         frame.render_widget(messages, messages_area);
     }
 }
